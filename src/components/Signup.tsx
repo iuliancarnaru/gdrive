@@ -32,9 +32,11 @@ export function SignUp() {
         position: "top-right",
       });
     } catch (error) {
+      const err = error as Error;
+
       toast({
         title: "Ups! Something went wrong!",
-        description: error.message,
+        description: err.message,
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -75,7 +77,7 @@ export function SignUp() {
                 {({ field }: FieldProps) => (
                   <FormControl mb={5}>
                     <FormLabel>Email</FormLabel>
-                    <Input {...field} placeholder="email" />
+                    <Input {...field} placeholder="email" required />
                   </FormControl>
                 )}
               </Field>
@@ -83,7 +85,12 @@ export function SignUp() {
                 {({ field }: FieldProps) => (
                   <FormControl mb={5}>
                     <FormLabel>Password</FormLabel>
-                    <Input {...field} type="password" placeholder="email" />
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="email"
+                      required
+                    />
                   </FormControl>
                 )}
               </Field>
@@ -91,7 +98,12 @@ export function SignUp() {
                 {({ field }: FieldProps) => (
                   <FormControl mb={10}>
                     <FormLabel>Confirm Password</FormLabel>
-                    <Input {...field} type="password" placeholder="email" />
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="email"
+                      required
+                    />
                   </FormControl>
                 )}
               </Field>

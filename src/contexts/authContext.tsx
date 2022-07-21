@@ -1,8 +1,17 @@
 import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
-import { createUserWithEmailAndPassword, User } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  User,
+  UserCredential,
+} from "firebase/auth";
 
-const AuthContext = React.createContext({});
+interface DefaultContext {
+  currentUser: User | null | undefined;
+  signup: (email: string, password: string) => Promise<UserCredential>;
+}
+
+const AuthContext = React.createContext({} as DefaultContext);
 
 export function useAuth() {
   return useContext(AuthContext);
