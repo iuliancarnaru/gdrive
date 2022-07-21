@@ -7,43 +7,107 @@ import {
   Input,
   Heading,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 
-import { useRef } from "react";
+import { useState } from "react";
+
+import { Formik, Form, Field, FieldProps } from "formik";
+
+import { useAuth } from "../contexts/authContext";
 
 export function SignUp() {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const passwordConfirmRef = useRef(null);
+  const { signup } = useAuth();
+  const toast = useToast();
+
+  async function handleSubmit({ email, password }: FormValues) {
+    try {
+      await signup(email, password);
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } catch (error) {
+      toast({
+        title: "Ups! Something went wrong!",
+        description: error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  }
+
+  interface FormValues {
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }
+
+  const initialValues: FormValues = {
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
 
   return (
     <Container mt={10}>
-      <Heading mb={6} textAlign="center">
+      <Heading mb={10} textAlign="center">
         Sign up
       </Heading>
-      <Box borderRadius={10} borderWidth="1px" p={7} mb={5}>
-        <FormControl>
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <Input id="email" type="email" ref={emailRef} required />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input id="password" type="password" ref={passwordRef} required />
-        </FormControl>
-        <FormControl mb={6}>
-          <FormLabel htmlFor="confirm-password">Confirm Password</FormLabel>
-          <Input
-            id="confirm-password"
-            type="password"
-            ref={passwordConfirmRef}
-            required
-          />
-        </FormControl>
-        <Button type="submit" isLoading={false} colorScheme="blue">
-          Sign up
-        </Button>
-      </Box>
-      <Text align="center">Already have an account? Log In</Text>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={(values, actions) => {
+          handleSubmit(values);
+          actions.setSubmitting(false);
+          actions.resetForm();
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Box borderWidth="1px" borderRadius={10} p={10}>
+              <Field name="email">
+                {({ field }: FieldProps) => (
+                  <FormControl mb={5}>
+                    <FormLabel>Email</FormLabel>
+                    <Input {...field} placeholder="email" />
+                  </FormControl>
+                )}
+              </Field>
+              <Field name="password">
+                {({ field }: FieldProps) => (
+                  <FormControl mb={5}>
+                    <FormLabel>Password</FormLabel>
+                    <Input {...field} type="password" placeholder="email" />
+                  </FormControl>
+                )}
+              </Field>
+              <Field name="confirmPassword">
+                {({ field }: FieldProps) => (
+                  <FormControl mb={10}>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <Input {...field} type="password" placeholder="email" />
+                  </FormControl>
+                )}
+              </Field>
+              <Button
+                isLoading={isSubmitting}
+                loadingText="Submitting"
+                colorScheme="blue"
+                variant="solid"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
     </Container>
   );
 }
