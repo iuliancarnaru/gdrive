@@ -12,28 +12,33 @@ import {
 } from "@chakra-ui/react";
 
 import { Formik, Form, Field, FieldProps } from "formik";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../contexts/authContext";
 
-export function SignUp() {
-  const { registerWithEmailAndPassword } = useAuth();
+export function Login() {
+  const { logInWithEmailAndPassword } = useAuth();
   const toast = useToast();
+  let location = useLocation();
+  let navigate = useNavigate();
+
+  //@ts-ignore
+  let from = location.state?.from?.pathname || "/";
 
   async function handleSubmit({ email, password }: FormValues) {
     try {
-      await registerWithEmailAndPassword(email, password);
+      await logInWithEmailAndPassword(email, password);
       toast({
-        title: "Account created.",
-        description: "We've created your account for you.",
+        title: "Welcome back!",
+        description: "We've missed you.",
         status: "success",
         duration: 9000,
         isClosable: true,
         position: "top-right",
       });
+      navigate(from, { replace: true });
     } catch (error) {
       const err = error as Error;
-
       toast({
         title: "Ups! Something went wrong!",
         description: err.message,
@@ -48,26 +53,23 @@ export function SignUp() {
   interface FormValues {
     email: string;
     password: string;
-    confirmPassword: string;
   }
 
   const initialValues: FormValues = {
     email: "",
     password: "",
-    confirmPassword: "",
   };
 
   return (
     <Container mt={10}>
       <Heading mb={10} textAlign="center">
-        Sign up
+        Login
       </Heading>
       <Formik
         initialValues={initialValues}
         onSubmit={(values, actions) => {
           handleSubmit(values);
           actions.setSubmitting(false);
-          actions.resetForm();
         }}
       >
         {({ isSubmitting }) => (
@@ -94,19 +96,6 @@ export function SignUp() {
                   </FormControl>
                 )}
               </Field>
-              <Field name="confirmPassword">
-                {({ field }: FieldProps) => (
-                  <FormControl mb={10}>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="email"
-                      required
-                    />
-                  </FormControl>
-                )}
-              </Field>
               <Button
                 isLoading={isSubmitting}
                 loadingText="Submitting"
@@ -121,9 +110,9 @@ export function SignUp() {
         )}
       </Formik>
       <Text mt={5} align="center">
-        Already have an account?{" "}
-        <Link as={RouterLink} to="/login">
-          Log In.
+        Need an account?{" "}
+        <Link as={RouterLink} to="/signup">
+          Sign up.
         </Link>
       </Text>
     </Container>

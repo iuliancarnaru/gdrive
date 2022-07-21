@@ -2,13 +2,23 @@ import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
 import {
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   User,
   UserCredential,
+  signOut,
 } from "firebase/auth";
 
 interface DefaultContext {
   currentUser: User | null | undefined;
-  signup: (email: string, password: string) => Promise<UserCredential>;
+  registerWithEmailAndPassword: (
+    email: string,
+    password: string
+  ) => Promise<UserCredential>;
+  logInWithEmailAndPassword: (
+    email: string,
+    password: string
+  ) => Promise<UserCredential>;
+  logOut(): void;
 }
 
 const AuthContext = React.createContext({} as DefaultContext);
@@ -20,8 +30,16 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactElement }) {
   const [currentUser, setCurrentUser] = useState<User | null>();
 
-  function signup(email: string, password: string) {
+  function registerWithEmailAndPassword(email: string, password: string) {
     return createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  function logInWithEmailAndPassword(email: string, password: string) {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
+
+  function logOut() {
+    return signOut(auth);
   }
 
   useEffect(() => {
@@ -34,7 +52,9 @@ export function AuthProvider({ children }: { children: ReactElement }) {
 
   const value = {
     currentUser,
-    signup,
+    registerWithEmailAndPassword,
+    logInWithEmailAndPassword,
+    logOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
