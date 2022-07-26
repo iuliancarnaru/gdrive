@@ -6,10 +6,10 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../../contexts/authContext";
 import { Link, useNavigate } from "react-router-dom";
 
-export function Dashboard() {
+export function Profile() {
   const { user, logOut } = useAuth();
   const toast = useToast();
   let navigate = useNavigate();

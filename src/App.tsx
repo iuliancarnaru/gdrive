@@ -1,9 +1,8 @@
 import { ReactElement } from "react";
 import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
-import { Dashboard } from "./components/Dashboard";
-import { Login } from "./components/Login";
-import { SignUp } from "./components/Signup";
-import { Test } from "./components/Test";
+import { Profile } from "./components/authentication/Profile";
+import { Login } from "./components/authentication/Login";
+import { SignUp } from "./components/authentication/Signup";
 import { Welcome } from "./components/Welcome";
 import { useAuth } from "./contexts/authContext";
 
@@ -34,18 +33,10 @@ function App() {
       <Route path="signup" element={<SignUp />} />
       <Route path="login" element={<Login />} />
       <Route
-        path="dashboard"
+        path="profile"
         element={
           <ProtectedRoute isAllowed={!!user}>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="test"
-        element={
-          <ProtectedRoute isAllowed={!!user}>
-            <Test />
+            <Profile />
           </ProtectedRoute>
         }
       />

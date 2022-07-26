@@ -1,3 +1,3 @@
 export function Welcome() {
-  return <div>WELCOME</div>;
+  return <div>WELCOME TO MY APP</div>;
 }

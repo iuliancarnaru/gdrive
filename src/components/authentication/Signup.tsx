@@ -14,7 +14,7 @@ import {
 import { Formik, Form, Field, FieldProps } from "formik";
 import { Link as RouterLink } from "react-router-dom";
 
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../../contexts/authContext";
 
 export function SignUp() {
   const { registerWithEmailAndPassword } = useAuth();
