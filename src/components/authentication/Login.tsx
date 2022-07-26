@@ -34,7 +34,7 @@ export function Login() {
         status: "success",
         duration: 9000,
         isClosable: true,
-        position: "top-right",
+        position: "bottom-right",
       });
       navigate(from, { replace: true });
     } catch (error) {
@@ -45,7 +45,7 @@ export function Login() {
         status: "error",
         duration: 9000,
         isClosable: true,
-        position: "top-right",
+        position: "bottom-right",
       });
     }
   }

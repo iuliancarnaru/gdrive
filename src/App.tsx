@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { Profile } from "./components/authentication/Profile";
 import { Login } from "./components/authentication/Login";
 import { SignUp } from "./components/authentication/Signup";
-import { Welcome } from "./components/Welcome";
+import { Dashboard } from "./components/drive/Dashboard";
 import { useAuth } from "./contexts/authContext";
 
 const ProtectedRoute = ({
@@ -29,7 +29,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Welcome />} />
+      <Route
+        path="/"
+        element={
+          // <ProtectedRoute isAllowed={!!user}>
+          <Dashboard />
+          // </ProtectedRoute>
+        }
+      />
       <Route path="signup" element={<SignUp />} />
       <Route path="login" element={<Login />} />
       <Route

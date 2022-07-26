@@ -23,9 +23,9 @@ export function Profile() {
         status: "success",
         duration: 9000,
         isClosable: true,
-        position: "top-right",
+        position: "bottom-right",
       });
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
     } catch (error) {
       const err = error as Error;
       toast({
@@ -34,7 +34,7 @@ export function Profile() {
         status: "error",
         duration: 9000,
         isClosable: true,
-        position: "top-right",
+        position: "bottom-right",
       });
     }
   }
@@ -51,9 +51,6 @@ export function Profile() {
             Update Profile
           </Button>
         </Link>
-      </Box>
-      <Box>
-        <Link to="/test">Go to test</Link>
       </Box>
 
       <Button colorScheme="teal" variant="link" onClick={handleLogout}>
