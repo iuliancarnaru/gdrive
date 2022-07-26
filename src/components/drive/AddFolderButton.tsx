@@ -23,7 +23,8 @@ export function AddFolderButton() {
   const handleSubmit = (folderName: string) => {
     setTimeout(() => {
       console.log(folderName);
-    }, 5000);
+    }, 1000);
+    onClose();
   };
 
   return (
