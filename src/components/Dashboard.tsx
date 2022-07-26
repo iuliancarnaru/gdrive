@@ -10,7 +10,7 @@ import { useAuth } from "../contexts/authContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export function Dashboard() {
-  const { currentUser, logOut } = useAuth();
+  const { user, logOut } = useAuth();
   const toast = useToast();
   let navigate = useNavigate();
 
@@ -44,7 +44,7 @@ export function Dashboard() {
       <Heading mb={5}>Profile</Heading>
       <Box mb={5}>
         <Text mb={5}>
-          Email: <strong>{currentUser?.email}</strong>
+          Email: <strong>{user?.email}</strong>
         </Text>
         <Link to="/update-profile">
           <Button colorScheme="teal" variant="solid">

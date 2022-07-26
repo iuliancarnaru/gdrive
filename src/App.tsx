@@ -7,38 +7,26 @@ import { Test } from "./components/Test";
 import { Welcome } from "./components/Welcome";
 import { useAuth } from "./contexts/authContext";
 
-function RequireAuth({ children }: { children: ReactElement }) {
-  let { currentUser } = useAuth();
-  let location = useLocation();
+const ProtectedRoute = ({
+  isAllowed,
+  redirectPath = "/login",
+  children,
+}: {
+  isAllowed: boolean;
+  redirectPath?: string;
+  children?: ReactElement;
+}) => {
+  const location = useLocation();
 
-  if (!currentUser) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!isAllowed) {
+    return <Navigate to={redirectPath} state={{ from: location }} replace />;
   }
 
   return children ? children : <Outlet />;
-}
-
-// const ProtectedRoute = ({
-//   isAllowed,
-//   children,
-// }: {
-//   isAllowed: boolean;
-//   redirectPath?: string;
-//   children?: ReactElement;
-// }) => {
-//   if (!isAllowed) {
-//     return <Navigate to="/login" state={{ from: location }} replace />;
-//   }
-
-//   return children ? children : <Outlet />;
-// };
+};
 
 function App() {
-  const { currentUser } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Routes>
@@ -48,17 +36,17 @@ function App() {
       <Route
         path="dashboard"
         element={
-          <RequireAuth>
+          <ProtectedRoute isAllowed={!!user}>
             <Dashboard />
-          </RequireAuth>
+          </ProtectedRoute>
         }
       />
       <Route
         path="test"
         element={
-          <RequireAuth>
+          <ProtectedRoute isAllowed={!!user}>
             <Test />
-          </RequireAuth>
+          </ProtectedRoute>
         }
       />
       <Route path="*" element={<p>There's nothing here: 404!</p>} />

@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 
 interface DefaultContext {
-  currentUser: User | null | undefined;
+  user: User | null | undefined;
   registerWithEmailAndPassword: (
     email: string,
     password: string
@@ -28,7 +28,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: ReactElement }) {
-  const [currentUser, setCurrentUser] = useState<User | null>();
+  const [user, setUser] = useState<User | null>();
 
   function registerWithEmailAndPassword(email: string, password: string) {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -43,15 +43,17 @@ export function AuthProvider({ children }: { children: ReactElement }) {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const value = {
-    currentUser,
+    user,
     registerWithEmailAndPassword,
     logInWithEmailAndPassword,
     logOut,
