@@ -17,14 +17,30 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Field, FieldProps, Form, Formik } from "formik";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../auth/firebase";
+import { useAuth } from "../../contexts/authContext";
 
-export function AddFolderButton() {
+export function AddFolderButton({ currentFolder }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const handleSubmit = (folderName: string) => {
-    setTimeout(() => {
-      console.log(folderName);
-    }, 1000);
-    onClose();
+  const { user } = useAuth();
+
+  const handleSubmit = async (folderName: string) => {
+    if (currentFolder === null) return;
+
+    try {
+      const docRef = await addDoc(collection(db, "folders"), {
+        name: folderName,
+        parentId: currentFolder.id,
+        userId: user?.uid,
+        // path,
+        createdAt: serverTimestamp(),
+      });
+      onClose();
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
