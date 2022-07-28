@@ -47,6 +47,14 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/folder/:folderId"
+        element={
+          <ProtectedRoute isAllowed={!!user}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<p>There's nothing here: 404!</p>} />
     </Routes>
   );

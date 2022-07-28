@@ -21,6 +21,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../auth/firebase";
 import { useAuth } from "../../contexts/authContext";
 import { FolderType } from "./Folder";
+import { ROOT_FOLDER } from "../../hooks/useFolder";
 
 export function AddFolderButton({
   currentFolder,
@@ -31,16 +32,19 @@ export function AddFolderButton({
   const { user } = useAuth();
 
   const handleSubmit = async (folderName: string) => {
-    console.log("called");
-
     if (currentFolder === null) return;
+    const path = [...currentFolder.path];
+
+    if (currentFolder !== ROOT_FOLDER) {
+      path.push({ name: currentFolder.name, id: currentFolder.id });
+    }
 
     try {
       const docRef = await addDoc(collection(db, "folders"), {
         name: folderName,
         parentId: currentFolder.id,
         userId: user?.uid,
-        // path,
+        path: path,
         createdAt: serverTimestamp(),
       });
       onClose();
@@ -54,7 +58,7 @@ export function AddFolderButton({
     <>
       <Tooltip label="Add folder" aria-label="Add folder">
         <IconButton
-          variant="outline"
+          variant="solid"
           colorScheme="teal"
           aria-label="Send email"
           icon={<AddIcon />}
