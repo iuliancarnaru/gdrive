@@ -1,10 +1,21 @@
 import { useEffect, useReducer } from "react";
-import { getDoc, doc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  query,
+  collection,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../auth/firebase";
+import { useAuth } from "../contexts/authContext";
+import { FolderType } from "../components/drive/Folder";
 
 const ACTIONS = {
   SELECT_FOLDER: "select-folder",
   UPDATE_FOLDER: "update-folder",
+  SET_CHILD_FOLDERS: "set-child-folders",
 };
 
 const ROOT_FOLDER = {
@@ -27,6 +38,11 @@ function reducer(state, { type, payload }) {
         ...state,
         folder: payload.folder,
       };
+    case ACTIONS.SET_CHILD_FOLDERS:
+      return {
+        ...state,
+        childFolders: payload.childFolders,
+      };
     default:
       return state;
   }
@@ -39,9 +55,11 @@ export function useFolder(
   const [state, dispatch] = useReducer(reducer, {
     folderId,
     folder,
-    childFolder: [],
+    childFolders: [],
     childFiles: [],
   });
+
+  const { user } = useAuth();
 
   useEffect(() => {
     dispatch({
@@ -89,6 +107,53 @@ export function useFolder(
       }
     })();
   }, [folderId]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "folders"),
+      where("parentId", "==", folderId),
+      where("userId", "==", user?.uid),
+      orderBy("createdAt")
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const childFolders = [];
+
+      querySnapshot.forEach((doc) => {
+        const formattedDoc = {
+          id: doc.id,
+          ...doc.data(),
+        };
+
+        childFolders.push(formattedDoc);
+      });
+
+      dispatch({
+        type: ACTIONS.SET_CHILD_FOLDERS,
+        payload: {
+          childFolders,
+        },
+      });
+    });
+
+    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    //   querySnapshot.forEach((doc) => {
+    //     const formattedDoc = {
+    //       id: doc.id,
+    //       ...doc.data(),
+    //     };
+
+    //     dispatch({
+    //       type: ACTIONS.SET_CHILD_FOLDERS,
+    //       payload: {
+    //         childFolders: formattedDoc,
+    //       },
+    //     });
+    //   });
+    // });
+
+    return () => unsubscribe();
+  }, [folderId, user]);
 
   return state;
 }

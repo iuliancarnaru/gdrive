@@ -20,8 +20,13 @@ import { Field, FieldProps, Form, Formik } from "formik";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../auth/firebase";
 import { useAuth } from "../../contexts/authContext";
+import { FolderType } from "./Folder";
 
-export function AddFolderButton({ currentFolder }) {
+export function AddFolderButton({
+  currentFolder,
+}: {
+  currentFolder: FolderType;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useAuth();
 

@@ -32,9 +32,9 @@ function App() {
       <Route
         path="/"
         element={
-          // <ProtectedRoute isAllowed={!!user}>
-          <Dashboard />
-          // </ProtectedRoute>
+          <ProtectedRoute isAllowed={!!user}>
+            <Dashboard />
+          </ProtectedRoute>
         }
       />
       <Route path="signup" element={<SignUp />} />
