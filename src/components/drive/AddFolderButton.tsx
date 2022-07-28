@@ -31,6 +31,8 @@ export function AddFolderButton({
   const { user } = useAuth();
 
   const handleSubmit = async (folderName: string) => {
+    console.log("called");
+
     if (currentFolder === null) return;
 
     try {

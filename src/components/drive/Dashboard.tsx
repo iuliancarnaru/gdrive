@@ -6,8 +6,7 @@ import { Folder } from "./Folder";
 import { FolderType } from "./Folder";
 
 export function Dashboard() {
-  const { folder, childFolders } = useFolder("ncypS1ezi9D5xM1CNe5n");
-  console.log(childFolders);
+  const { folder, childFolders } = useFolder("pOku3PcaDN1dUck6aM4d");
 
   return (
     <>
@@ -16,7 +15,7 @@ export function Dashboard() {
         <AddFolderButton currentFolder={folder} />
         {childFolders.length > 0 && (
           <div>
-            {childFolders.map((child: FolderType) => (
+            {childFolders?.map((child: FolderType) => (
               <Folder folder={child} />
             ))}
           </div>

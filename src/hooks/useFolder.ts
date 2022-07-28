@@ -117,7 +117,7 @@ export function useFolder(
     );
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const childFolders = [];
+      const childFolders: { id: string }[] = [];
 
       querySnapshot.forEach((doc) => {
         const formattedDoc = {
@@ -135,22 +135,6 @@ export function useFolder(
         },
       });
     });
-
-    // const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    //   querySnapshot.forEach((doc) => {
-    //     const formattedDoc = {
-    //       id: doc.id,
-    //       ...doc.data(),
-    //     };
-
-    //     dispatch({
-    //       type: ACTIONS.SET_CHILD_FOLDERS,
-    //       payload: {
-    //         childFolders: formattedDoc,
-    //       },
-    //     });
-    //   });
-    // });
 
     return () => unsubscribe();
   }, [folderId, user]);
