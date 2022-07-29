@@ -18,7 +18,13 @@ const ACTIONS = {
   SET_CHILD_FOLDERS: "set-child-folders",
 };
 
-export const ROOT_FOLDER = {
+export interface RootFolderType {
+  name: string;
+  id: string | null;
+  path: RootFolderType[] | [];
+}
+
+export const ROOT_FOLDER: RootFolderType = {
   name: "Root",
   id: null,
   path: [],
