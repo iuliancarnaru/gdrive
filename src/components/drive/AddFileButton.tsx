@@ -5,6 +5,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../auth/firebase";
 import { useAuth } from "../../contexts/authContext";
 import { ROOT_FOLDER } from "../../hooks/useFolder";
+import { addDoc, serverTimestamp, collection } from "firebase/firestore";
+import { db } from "../../auth/firebase";
 
 //@ts-ignore
 export function AddFileButton({ currentFolder }) {
@@ -13,10 +15,14 @@ export function AddFileButton({ currentFolder }) {
     const file = event.target.files?.[0] || null;
     if (currentFolder === null || file === null) return;
 
+    const previousPath = currentFolder.path
+      .map((path: { id: string; name: string }) => path.name)
+      .join("/");
+
     const filePath =
       currentFolder === ROOT_FOLDER
-        ? `${currentFolder.path.join("/")}/${file.name}`
-        : `${currentFolder.path.join("/")}/${currentFolder.name}/${file.name}`;
+        ? `${previousPath}/${file.name}`
+        : `${previousPath}/${currentFolder.name}/${file.name}`;
 
     const uploadTask = uploadBytesResumable(
       ref(storage, `/files/${user?.uid}/${filePath}`),
@@ -45,8 +51,15 @@ export function AddFileButton({ currentFolder }) {
       () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const docRef = await addDoc(collection(db, "files"), {
+            url: downloadURL,
+            name: file.name,
+            userId: user?.uid,
+            folderId: currentFolder.id,
+            createdAt: serverTimestamp(),
+          });
+          console.log("Document written with ID: ", docRef.id);
         });
       }
     );
