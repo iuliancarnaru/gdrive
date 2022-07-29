@@ -6,6 +6,7 @@ import { Folder } from "./Folder";
 import { FolderType } from "./Folder";
 import { useParams } from "react-router-dom";
 import { FolderBreadcrumbs } from "./FolderBreadCrumbs";
+import { AddFileButton } from "./AddFileButton";
 
 export function Dashboard() {
   const { folderId } = useParams();
@@ -20,9 +21,10 @@ export function Dashboard() {
       <Box p={5}>
         <FolderBreadcrumbs currentFolder={folder} />
       </Box>
-      <Box p={5}>
+      <Flex p={5}>
         <AddFolderButton currentFolder={folder} />
-      </Box>
+        <AddFileButton currentFolder={folder} />
+      </Flex>
       <Flex p={5}>
         {childFolders.length > 0 && (
           <>

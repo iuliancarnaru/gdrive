@@ -18,18 +18,13 @@ const ACTIONS = {
   SET_CHILD_FOLDERS: "set-child-folders",
 };
 
-export interface RootFolderType {
-  name: string;
-  id: string | null;
-  path: RootFolderType[] | [];
-}
-
-export const ROOT_FOLDER: RootFolderType = {
+export const ROOT_FOLDER = {
   name: "Root",
   id: null,
   path: [],
 };
 
+// @ts-ignore
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SELECT_FOLDER:

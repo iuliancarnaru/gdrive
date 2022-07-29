@@ -15,7 +15,7 @@ import {
   Input,
   Box,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { SmallAddIcon } from "@chakra-ui/icons";
 import { Field, FieldProps, Form, Formik } from "formik";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../auth/firebase";
@@ -56,15 +56,18 @@ export function AddFolderButton({
 
   return (
     <>
-      <Tooltip label="Add folder" aria-label="Add folder">
-        <IconButton
-          variant="solid"
-          colorScheme="teal"
-          aria-label="Send email"
-          icon={<AddIcon />}
-          onClick={onOpen}
-        />
-      </Tooltip>
+      <Box mr={2}>
+        <Tooltip label="Add folder" aria-label="Add folder">
+          <IconButton
+            variant="solid"
+            colorScheme="teal"
+            aria-label="Send email"
+            icon={<SmallAddIcon />}
+            onClick={onOpen}
+          />
+        </Tooltip>
+      </Box>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

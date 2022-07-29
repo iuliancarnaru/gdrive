@@ -6,15 +6,10 @@ import {
   BreadcrumbSeparator,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { RootFolderType, ROOT_FOLDER } from "../../hooks/useFolder";
+import { ROOT_FOLDER } from "../../hooks/useFolder";
 
-export function FolderBreadcrumbs({
-  currentFolder,
-}: {
-  currentFolder: RootFolderType;
-}) {
-  console.log(currentFolder);
-
+// @ts-ignore
+export function FolderBreadcrumbs({ currentFolder }) {
   let path = currentFolder === ROOT_FOLDER ? [] : [ROOT_FOLDER];
 
   if (currentFolder) {
