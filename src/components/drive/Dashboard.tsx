@@ -7,13 +7,11 @@ import { FolderType } from "./Folder";
 import { useParams } from "react-router-dom";
 import { FolderBreadcrumbs } from "./FolderBreadCrumbs";
 import { AddFileButton } from "./AddFileButton";
+import { File } from "./File";
 
 export function Dashboard() {
   const { folderId } = useParams();
-  const {
-    folder,
-    childFolders,
-  }: { folder: FolderType; childFolders: FolderType[] } = useFolder(folderId);
+  const { folder, childFolders, childFiles } = useFolder(folderId);
 
   return (
     <>
@@ -29,8 +27,20 @@ export function Dashboard() {
         {childFolders.length > 0 && (
           <>
             {childFolders?.map((child: FolderType) => (
-              <Folder folder={child} />
+              <Folder key={child.id} folder={child} />
             ))}
+          </>
+        )}
+      </Flex>
+      {childFolders.length > 0 && childFiles.length > 0 && <hr />}
+      <Flex p={5}>
+        {childFiles.length > 0 && (
+          <>
+            {childFiles?.map((child) => {
+              console.log(child);
+
+              return <File file={child} />;
+            })}
           </>
         )}
       </Flex>
